@@ -36,10 +36,13 @@ Se tienen que controlar los siguients httprequest code estados:
 	Respuesta estándar para peticiones correctas.
 * 404 Not Found
 	Recurso no encontrado. Se utiliza cuando el servidor web no encuentra la página o recurso solicitado.
-*500 Internal Server Error
+* 500 Internal Server Error
 Es un código comúnmente emitido por aplicaciones empotradas en servidores web, mismas que generan contenido dinámicamente, por ejemplo aplicaciones montadas en IIS o Tomcat, cuando se encuentran con situaciones de error ajenas a la naturaleza del servidor web.
 
-Para realizar la comunicacion se utiliza las TASKS.
+Para Controlar la respuesta comunicacion Cliente-Servidor se utiliza las TASKS.
+Se realizan tareas Asincronas para no romper el flujo de y poder realizar tareas paralelas.
+
+
 
 
 

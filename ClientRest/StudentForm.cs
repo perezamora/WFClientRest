@@ -151,10 +151,18 @@ namespace ClientRest
 
         private async Task<HttpStatusCode> DeleteStudentAsync()
         {
-            var id = Convert.ToInt32(alumno.ID);
-            var endpoint = $"api/Student/DeleteStudent/{id}";
-            HttpResponseMessage response = await client.DeleteAsync(endpoint);
-            return response.StatusCode;
+            try
+            {
+                var id = Convert.ToInt32(alumno.ID);
+                var endpoint = $"api/Student/DeleteStudent/{id}";
+                HttpResponseMessage response = await client.DeleteAsync(endpoint);
+                return response.StatusCode;
+            }
+            catch (HttpRequestException)
+            {
+                return HttpStatusCode.Forbidden;
+            }
+
         }
 
         private async Task<Student> UpdateStudenAsync()

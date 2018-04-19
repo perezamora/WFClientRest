@@ -25,12 +25,12 @@ namespace ClientRest
         {
             alumno = new Student();
             client = new HttpClient();
+            this.InitHttpHeader();
             InitializeComponent();
         }
 
         private void BtnAction_Click(object sender, EventArgs e)
         {
-            this.InitHttpHeader();
             LoadAlumnoData();
             var accion = Environment.GetEnvironmentVariable(Recursos.Literales.accion, EnvironmentVariableTarget.User);
             switch ((OpcAccion)Enum.Parse(typeof(OpcAccion), accion.ToString(), true))

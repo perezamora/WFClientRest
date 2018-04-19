@@ -13,7 +13,8 @@ namespace ClientRest
             Create = 1,
             Read,
             Update,
-            Delete
+            Delete,
+            GetAll
         }
     }
 }

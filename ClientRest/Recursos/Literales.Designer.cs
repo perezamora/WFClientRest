@@ -70,6 +70,24 @@ namespace ClientRest.Recursos {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a api/Student/AddStudent.
+        /// </summary>
+        internal static string add {
+            get {
+                return ResourceManager.GetString("add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a GetAll.
+        /// </summary>
+        internal static string AllItems {
+            get {
+                return ResourceManager.GetString("AllItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a baseendopint.
         /// </summary>
         internal static string baseendopint {
@@ -93,6 +111,33 @@ namespace ClientRest.Recursos {
         internal static string Delete {
             get {
                 return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a $&quot;api/Student/DeleteStudent/{id}&quot;.
+        /// </summary>
+        internal static string deleteById {
+            get {
+                return ResourceManager.GetString("deleteById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a api/Student/GetAllStudents.
+        /// </summary>
+        internal static string getAll {
+            get {
+                return ResourceManager.GetString("getAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a $&quot;api/Student/ReadStudent/{id}&quot;.
+        /// </summary>
+        internal static string getById {
+            get {
+                return ResourceManager.GetString("getById", resourceCulture);
             }
         }
         

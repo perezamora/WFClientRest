@@ -48,6 +48,9 @@ namespace ClientRest
                 case OpcAccion.Update:
                     ShowStudent(Task<Student>.Run(UpdateStudenAsync).Result);
                     break;
+               case OpcAccion.GetAll:
+                    ShowAllStudent(Task<List<Student>>.Run(ReadAllStudentAsync).Result);
+                    break;
             }
             ResetFieldForm();
         }
@@ -73,6 +76,9 @@ namespace ClientRest
                     this.HideFieldFormReadDelete();
                     Environment.SetEnvironmentVariable(Recursos.Literales.accion, Recursos.Literales.Delete, EnvironmentVariableTarget.User);
                     break;
+                case OpcAccion.GetAll:
+                    Environment.SetEnvironmentVariable(Recursos.Literales.accion, Recursos.Literales.AllItems, EnvironmentVariableTarget.User);
+                    break;
             }
         }
 
@@ -82,6 +88,12 @@ namespace ClientRest
             var index = listAction.SelectedIndex;
             var formato = listAction.Items[index].ToString() ?? Environment.GetEnvironmentVariable(Recursos.Literales.accion, EnvironmentVariableTarget.User);
             return (OpcAccion)Enum.Parse(typeof(OpcAccion), formato.ToString(), true);
+        }
+
+        private void ShowAllStudent(List<Student> lalumnos)
+        {
+            dataGridView1.ReadOnly = true;
+            dataGridView1.DataSource = lalumnos;
         }
 
         private void ShowStudent(Student alumno)
@@ -100,12 +112,25 @@ namespace ClientRest
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
+        private async Task<List<Student>> ReadAllStudentAsync()
+        {
+            var id = Convert.ToInt32(alumno.ID);
+            HttpResponseMessage response = await client.GetAsync(Recursos.Literales.getAll);
+            response.EnsureSuccessStatusCode();
+            List<Student> alumnos = new List<Student>();
+            using (HttpContent content = response.Content)
+            {
+                var baseurl = System.Configuration.ConfigurationManager.AppSettings[Recursos.Literales.baseendopint];
+                alumnos = await response.Content.ReadAsAsync<List<Student>>();
+                return alumnos;
+            }
+
+        }
+        
         private async Task<Student> ReadStudentAsync()
         {
             var id = Convert.ToInt32(alumno.ID);
-            var endpoint = $"api/Student/ReadStudent/{id}";
-
-            HttpResponseMessage response = await client.GetAsync(endpoint);
+            HttpResponseMessage response = await client.GetAsync(Recursos.Literales.getById);
             response.EnsureSuccessStatusCode();
 
             using (HttpContent content = response.Content)
@@ -119,10 +144,7 @@ namespace ClientRest
 
         private async Task<Student> CreateStudentAsync()
         {
-            var endpoint = "api/Student/AddStudent";
-
-            alumno.Guid = Guid.NewGuid();
-            HttpResponseMessage response = await client.PostAsJsonAsync(endpoint, alumno);
+            HttpResponseMessage response = await client.PostAsJsonAsync(Recursos.Literales.add, alumno);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<Student>();
         }
@@ -130,8 +152,7 @@ namespace ClientRest
         private async Task<HttpStatusCode> DeleteStudentAsync()
         {
             var id = Convert.ToInt32(alumno.ID);
-            var endpoint = $"api/Student/DeleteStudent/{id}";
-            HttpResponseMessage response = await client.DeleteAsync(endpoint);
+            HttpResponseMessage response = await client.DeleteAsync(Recursos.Literales.deleteById);
             return response.StatusCode;
         }
 
@@ -139,7 +160,7 @@ namespace ClientRest
         {
             var id = Convert.ToInt32(alumno.ID);
             var endpoint = $"api/Student/UpdateStudent/{id}";
-            HttpResponseMessage response = await client.PutAsJsonAsync($"api/products/{id}", alumno);
+            HttpResponseMessage response = await client.PutAsJsonAsync(endpoint, alumno);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsAsync<Student>();

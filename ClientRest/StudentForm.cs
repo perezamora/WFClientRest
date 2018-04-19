@@ -12,6 +12,7 @@ using System.Net.Http.Formatting;
 using static ClientRest.ListAcciones;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.Net;
 
 namespace ClientRest
 {
@@ -24,31 +25,31 @@ namespace ClientRest
         {
             alumno = new Student();
             client = new HttpClient();
-            
-            client.BaseAddress = new Uri("http://localhost:50590/");
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             InitializeComponent();
         }
 
         private void BtnAction_Click(object sender, EventArgs e)
         {
+            this.InitHttpHeader();
+            LoadAlumnoData();
             var accion = Environment.GetEnvironmentVariable(Recursos.Literales.accion, EnvironmentVariableTarget.User);
             switch ((OpcAccion)Enum.Parse(typeof(OpcAccion), accion.ToString(), true))
             {
                 case OpcAccion.Create:
+                    HideFieldFormReadDelete();
+                    ShowStudent(Task<Student>.Run(CreateStudentAsync).Result);
                     break;
                 case OpcAccion.Read:
-                    var t = Task<Student>.Run(ReadStudentAsync);
-                    ShowStudent(t.Result);
+                    ShowStudent(Task<Student>.Run(ReadStudentAsync).Result);
                     break;
                 case OpcAccion.Delete:
-
+                    var code = Task<HttpStatusCode>.Run(DeleteStudentAsync).Result;
                     break;
                 case OpcAccion.Update:
-
+                    ShowStudent(Task<Student>.Run(UpdateStudenAsync).Result);
                     break;
             }
+            ResetFieldForm();
         }
 
         private void listAction_SelectedIndexChanged(object sender, EventArgs e)
@@ -57,15 +58,19 @@ namespace ClientRest
             switch (accion)
             {
                 case OpcAccion.Create:
+                    this.ShowFieldFormReadDelete();
                     Environment.SetEnvironmentVariable(Recursos.Literales.accion, Recursos.Literales.Create, EnvironmentVariableTarget.User);
                     break;
                 case OpcAccion.Read:
+                    this.HideFieldFormReadDelete();
                     Environment.SetEnvironmentVariable(Recursos.Literales.accion, Recursos.Literales.Read, EnvironmentVariableTarget.User);
                     break;
                 case OpcAccion.Update:
+                    this.ShowFieldFormReadDelete();
                     Environment.SetEnvironmentVariable(Recursos.Literales.accion, Recursos.Literales.Update, EnvironmentVariableTarget.User);
                     break;
                 case OpcAccion.Delete:
+                    this.HideFieldFormReadDelete();
                     Environment.SetEnvironmentVariable(Recursos.Literales.accion, Recursos.Literales.Delete, EnvironmentVariableTarget.User);
                     break;
             }
@@ -81,46 +86,106 @@ namespace ClientRest
 
         private void ShowStudent(Student alumno)
         {
-            textId.Text = Convert.ToString(alumno.Id);
-            textName.Text = alumno.Name;
-            textSurname.Text = alumno.Apellidos;
-            textDni.Text = alumno.Dni;
-            BirthDate.Value = alumno.FechaNac;
             dataGridView1.ReadOnly = true;
             List<Student> lalumnos = new List<Student>();
             lalumnos.Add(alumno);
             dataGridView1.DataSource = lalumnos;
         }
 
+        private void InitHttpHeader()
+        {
+            client.BaseAddress = new Uri("http://localhost:64195/");
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
         private async Task<Student> ReadStudentAsync()
         {
-            var path = "https://api.myjson.com/bins/u3bwz";
-            using (var client = new HttpClient())
+
+            //var path = "https://api.myjson.com/bins/u3bwz";
+            var id = Convert.ToInt32(alumno.Id);
+            var endpoint = "api/Student/ReadStudent/{id}";
+
+            HttpResponseMessage response = await client.GetAsync(endpoint);
+            response.EnsureSuccessStatusCode();
+
+            using (HttpContent content = response.Content)
             {
-
-                HttpResponseMessage response = await client.GetAsync(path);
-                response.EnsureSuccessStatusCode();
-
-                using (HttpContent content = response.Content)
-                {
-                    //string responseBody = await response.Content.ReadAsStringAsync();
-                    //alumno = JsonConvert.DeserializeObject<Student>(responseBody);
-                    alumno = await response.Content.ReadAsAsync<Student>();
-                    return alumno;
-                }
+                //string responseBody = await response.Content.ReadAsStringAsync();
+                //alumno = JsonConvert.DeserializeObject<Student>(responseBody);
+                alumno = await response.Content.ReadAsAsync<Student>();
+                return alumno;
             }
 
         }
 
-        private async Task<Uri> CreateStudentAsync(Student student)
+        private async Task<Student> CreateStudentAsync()
         {
-            string endpoint = "api/Student/AddStudent";
-            using (var client = new HttpClient())
-            {
-                HttpResponseMessage response = await client.PostAsJsonAsync(endpoint, student);
-                response.EnsureSuccessStatusCode();
-                return response.Headers.Location;
-            }
+            var endpoint = "api/Student/AddStudent";
+
+            HttpResponseMessage response = await client.PostAsJsonAsync(endpoint, alumno);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsAsync<Student>();
+        }
+
+        private async Task<HttpStatusCode> DeleteStudentAsync()
+        {
+            var id = Convert.ToInt32(alumno.Id);
+            var endpoint = $"api/Student/DeleteStudent/{id}";
+            HttpResponseMessage response = await client.DeleteAsync(endpoint);
+            return response.StatusCode;
+        }
+
+        private async Task<Student> UpdateStudenAsync()
+        {
+            var id = Convert.ToInt32(alumno.Id);
+            var endpoint = $"api/Student/UpdateStudent/{id}";
+            HttpResponseMessage response = await client.PutAsJsonAsync($"api/products/{id}", alumno);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadAsAsync<Student>();
+        }
+
+        private void ResetFieldForm()
+        {
+            textId.Text = "";
+            textName.Text = "";
+            textSurname.Text = "";
+            textDni.Text = "";
+            BirthDate.Text = "";
+        }
+
+        private void LoadAlumnoData()
+        {
+            alumno.Id = textId.Text == "" ? 0 : Convert.ToInt32(textId.Text);
+            alumno.Name = textName.Text;
+            alumno.Apellidos = textSurname.Text;
+            alumno.Dni = textDni.Text;
+            alumno.FechaNac = BirthDate.Value;
+        }
+
+        private void HideFieldFormReadDelete()
+        {
+            textName.Visible = false;
+            textSurname.Visible = false;
+            textDni.Visible = false;
+            BirthDate.Visible = false;
+            labelName.Visible = false;
+            labelSurname.Visible = false;
+            labelDni.Visible = false;
+            labelBirth.Visible = false;
+        }
+
+        private void ShowFieldFormReadDelete()
+        {
+            textName.Visible = true;
+            textSurname.Visible = true;
+            textDni.Visible = true;
+            BirthDate.Visible = true;
+            labelName.Visible = true;
+            labelSurname.Visible = true;
+            labelDni.Visible = true;
+            labelBirth.Visible = true;
         }
     }
 }

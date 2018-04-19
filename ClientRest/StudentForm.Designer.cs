@@ -95,7 +95,7 @@
             // 
             this.BtnAction.Location = new System.Drawing.Point(563, 114);
             this.BtnAction.Name = "BtnAction";
-            this.BtnAction.Size = new System.Drawing.Size(115, 39);
+            this.BtnAction.Size = new System.Drawing.Size(219, 78);
             this.BtnAction.TabIndex = 5;
             this.BtnAction.Text = "Actions";
             this.BtnAction.UseVisualStyleBackColor = true;
@@ -111,7 +111,7 @@
             "Delete"});
             this.listAction.Location = new System.Drawing.Point(563, 65);
             this.listAction.Name = "listAction";
-            this.listAction.Size = new System.Drawing.Size(121, 28);
+            this.listAction.Size = new System.Drawing.Size(219, 28);
             this.listAction.TabIndex = 6;
             this.listAction.Text = "List Actions";
             this.listAction.SelectedIndexChanged += new System.EventHandler(this.listAction_SelectedIndexChanged);

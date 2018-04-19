@@ -144,7 +144,7 @@ namespace ClientRest
 
         private async Task<Student> CreateStudentAsync()
         {
-            HttpResponseMessage response = await client.PostAsJsonAsync(Recursos.Literales.add, alumno);
+            HttpResponseMessage response = await client.PutAsJsonAsync(Recursos.Literales.add, alumno);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<Student>();
         }
@@ -161,7 +161,7 @@ namespace ClientRest
         {
             var id = Convert.ToInt32(alumno.ID);
             var endpoint = $"api/Student/UpdateStudent/{id}";
-            HttpResponseMessage response = await client.PutAsJsonAsync(endpoint, alumno);
+            HttpResponseMessage response = await client.PostAsJsonAsync(endpoint, alumno);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsAsync<Student>();

@@ -31,4 +31,15 @@ Metodos utilizados para los verbos REST API:
 * api/Student/GetStudentById/id (Recupera el student por id)
 * api/Student/AddStudent        (Inserta un nuevo student)
 
+Se tienen que controlar los siguients httprequest code estados:
+* 200 OK
+	Respuesta estándar para peticiones correctas.
+* 404 Not Found
+	Recurso no encontrado. Se utiliza cuando el servidor web no encuentra la página o recurso solicitado.
+*500 Internal Server Error
+Es un código comúnmente emitido por aplicaciones empotradas en servidores web, mismas que generan contenido dinámicamente, por ejemplo aplicaciones montadas en IIS o Tomcat, cuando se encuentran con situaciones de error ajenas a la naturaleza del servidor web.
+
 Para realizar la comunicacion se utiliza las TASKS.
+
+
+

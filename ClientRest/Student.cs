@@ -8,26 +8,15 @@ namespace ClientRest
 {
     public class Student
     {
-        #region Atributos
-        private int id;
-        private string name;
-        private string apellidos;
-        private string dni;
-        private DateTime fechaNac;
-        private int edad;
-        private string fechaCr;
-        #endregion
+        public Guid Guid { get; set; }
+        public int ID { get; set; }
+        public string Nombre { get; set; }
+        public string Apellidos { get; set; }
+        public string DNI { get; set; }
+        public DateTime FechaDeNacimiento { get; set; }
+        public DateTime FechaHoraRegistro { get; set; }
+        public int Edad { get; set; }
 
         public Student() { }
-
-        #region Propiedades
-        public int Id { get => id; set => id = value; }
-        public string Name { get => name; set => name = value; }
-        public string Apellidos { get => apellidos; set => apellidos = value; }
-        public string Dni { get => dni; set => dni = value; }
-        public DateTime FechaNac { get => fechaNac; set => fechaNac = value; }
-        public int Edad { get => edad; set => edad = value; }
-        public string FechaCr { get => fechaCr; set => fechaCr = value; }
-        #endregion
     }
 }

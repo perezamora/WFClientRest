@@ -103,7 +103,7 @@ namespace ClientRest
         {
 
             //var path = "https://api.myjson.com/bins/u3bwz";
-            var id = Convert.ToInt32(alumno.Id);
+            var id = Convert.ToInt32(alumno.ID);
             var endpoint = "api/Student/ReadStudent/{id}";
 
             HttpResponseMessage response = await client.GetAsync(endpoint);
@@ -123,6 +123,7 @@ namespace ClientRest
         {
             var endpoint = "api/Student/AddStudent";
 
+            alumno.Guid = Guid.NewGuid();
             HttpResponseMessage response = await client.PostAsJsonAsync(endpoint, alumno);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<Student>();
@@ -130,7 +131,7 @@ namespace ClientRest
 
         private async Task<HttpStatusCode> DeleteStudentAsync()
         {
-            var id = Convert.ToInt32(alumno.Id);
+            var id = Convert.ToInt32(alumno.ID);
             var endpoint = $"api/Student/DeleteStudent/{id}";
             HttpResponseMessage response = await client.DeleteAsync(endpoint);
             return response.StatusCode;
@@ -138,7 +139,7 @@ namespace ClientRest
 
         private async Task<Student> UpdateStudenAsync()
         {
-            var id = Convert.ToInt32(alumno.Id);
+            var id = Convert.ToInt32(alumno.ID);
             var endpoint = $"api/Student/UpdateStudent/{id}";
             HttpResponseMessage response = await client.PutAsJsonAsync($"api/products/{id}", alumno);
             response.EnsureSuccessStatusCode();
@@ -157,11 +158,11 @@ namespace ClientRest
 
         private void LoadAlumnoData()
         {
-            alumno.Id = textId.Text == "" ? 0 : Convert.ToInt32(textId.Text);
-            alumno.Name = textName.Text;
+            alumno.ID = textId.Text == "" ? 0 : Convert.ToInt32(textId.Text);
+            alumno.Nombre = textName.Text;
             alumno.Apellidos = textSurname.Text;
-            alumno.Dni = textDni.Text;
-            alumno.FechaNac = BirthDate.Value;
+            alumno.DNI = textDni.Text;
+            alumno.FechaDeNacimiento = BirthDate.Value;
         }
 
         private void HideFieldFormReadDelete()

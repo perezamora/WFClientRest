@@ -94,25 +94,23 @@ namespace ClientRest
 
         private void InitHttpHeader()
         {
-            client.BaseAddress = new Uri("http://localhost:64195/");
+            var baseurl = System.Configuration.ConfigurationManager.AppSettings[Recursos.Literales.baseendopint];
+            client.BaseAddress = new Uri(baseurl);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         private async Task<Student> ReadStudentAsync()
         {
-
-            //var path = "https://api.myjson.com/bins/u3bwz";
             var id = Convert.ToInt32(alumno.ID);
-            var endpoint = "api/Student/ReadStudent/{id}";
+            var endpoint = $"api/Student/ReadStudent/{id}";
 
             HttpResponseMessage response = await client.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
 
             using (HttpContent content = response.Content)
             {
-                //string responseBody = await response.Content.ReadAsStringAsync();
-                //alumno = JsonConvert.DeserializeObject<Student>(responseBody);
+                var baseurl = System.Configuration.ConfigurationManager.AppSettings[Recursos.Literales.baseendopint];
                 alumno = await response.Content.ReadAsAsync<Student>();
                 return alumno;
             }

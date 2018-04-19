@@ -132,4 +132,7 @@
   <data name="Update" xml:space="preserve">
     <value>Update</value>
   </data>
+  <data name="baseendopint" xml:space="preserve">
+    <value>baseendopint</value>
+  </data>
 </root>

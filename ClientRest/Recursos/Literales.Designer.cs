@@ -70,6 +70,15 @@ namespace ClientRest.Recursos {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a baseendopint.
+        /// </summary>
+        internal static string baseendopint {
+            get {
+                return ResourceManager.GetString("baseendopint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Create.
         /// </summary>
         internal static string Create {

@@ -77,6 +77,7 @@ namespace ClientRest
                     Environment.SetEnvironmentVariable(Recursos.Literales.accion, Recursos.Literales.Delete, EnvironmentVariableTarget.User);
                     break;
                 case OpcAccion.GetAll:
+                    this.HideFieldFormReadDelete();
                     Environment.SetEnvironmentVariable(Recursos.Literales.accion, Recursos.Literales.AllItems, EnvironmentVariableTarget.User);
                     break;
             }

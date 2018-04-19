@@ -108,7 +108,8 @@
             "Create",
             "Update",
             "Read",
-            "Delete"});
+            "Delete",
+            "GetAll"});
             this.listAction.Location = new System.Drawing.Point(563, 65);
             this.listAction.Name = "listAction";
             this.listAction.Size = new System.Drawing.Size(219, 28);

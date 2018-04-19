@@ -120,7 +120,6 @@ namespace ClientRest
             List<Student> alumnos = new List<Student>();
             using (HttpContent content = response.Content)
             {
-                var baseurl = System.Configuration.ConfigurationManager.AppSettings[Recursos.Literales.baseendopint];
                 alumnos = await response.Content.ReadAsAsync<List<Student>>();
                 return alumnos;
             }
@@ -130,12 +129,12 @@ namespace ClientRest
         private async Task<Student> ReadStudentAsync()
         {
             var id = Convert.ToInt32(alumno.ID);
-            HttpResponseMessage response = await client.GetAsync(Recursos.Literales.getById);
+            var endpoint = $"api/Student/ReadStudent/{id}";
+            HttpResponseMessage response = await client.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
 
             using (HttpContent content = response.Content)
             {
-                var baseurl = System.Configuration.ConfigurationManager.AppSettings[Recursos.Literales.baseendopint];
                 alumno = await response.Content.ReadAsAsync<Student>();
                 return alumno;
             }
@@ -152,7 +151,8 @@ namespace ClientRest
         private async Task<HttpStatusCode> DeleteStudentAsync()
         {
             var id = Convert.ToInt32(alumno.ID);
-            HttpResponseMessage response = await client.DeleteAsync(Recursos.Literales.deleteById);
+            var endpoint = $"api/Student/DeleteStudent/{id}";
+            HttpResponseMessage response = await client.DeleteAsync(endpoint);
             return response.StatusCode;
         }
 

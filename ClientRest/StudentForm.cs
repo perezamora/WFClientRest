@@ -49,7 +49,8 @@ namespace ClientRest
                     ShowStudent(Task<Student>.Run(UpdateStudenAsync).Result);
                     break;
                case OpcAccion.GetAll:
-                    ShowAllStudent(Task<List<Student>>.Run(ReadAllStudentAsync).Result);
+                    var listaAlumnos = Task<List<Student>>.Run(ReadAllStudentAsync).Result;
+                    ShowAllStudent(listaAlumnos);
                     break;
             }
             ResetFieldForm();
@@ -116,22 +117,44 @@ namespace ClientRest
         private async Task<List<Student>> ReadAllStudentAsync()
         {
             var id = Convert.ToInt32(alumno.ID);
-            HttpResponseMessage response = await client.GetAsync(Recursos.Literales.getAll);
-            response.EnsureSuccessStatusCode();
-            List<Student> alumnos = new List<Student>();
-            using (HttpContent content = response.Content)
-            {
-                alumnos = await response.Content.ReadAsAsync<List<Student>>();
-                return alumnos;
-            }
 
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync("https://api.myjson.com/bins/kpe");
+                //HttpResponseMessage response = await client.GetAsync(Recursos.Literales.getAll);
+                response.EnsureSuccessStatusCode();
+                List<Student> alumnos = new List<Student>();
+                using (HttpContent content = response.Content)
+                {
+                    alumnos = await response.Content.ReadAsAsync<List<Student>>();
+
+                    if (response.StatusCode.ToString() != "OK")
+                    {
+                        var redis = RedisStore.RedisCache;
+                        var key = "listaAlumnos";
+                        return JsonConvert.DeserializeObject<List<Student>>(redis.StringGet(key));
+                    }
+                    else
+                    {
+                        var redis = RedisStore.RedisCache;
+                        redis.StringSet("listaAlumnos",JsonConvert.SerializeObject(alumnos));
+                        return alumnos;
+                    }
+
+                }
+
+            }catch(Exception)
+            {
+                return null;
+            }
         }
         
         private async Task<Student> ReadStudentAsync()
         {
             var id = Convert.ToInt32(alumno.ID);
-            var endpoint = $"api/Student/ReadStudent/{id}";
-            HttpResponseMessage response = await client.GetAsync(endpoint);
+           /* var endpoint = $"api/Student/ReadStudent/{id}";
+            HttpResponseMessage response = await client.GetAsync(endpoint);*/
+            HttpResponseMessage response = await client.GetAsync("https://api.myjson.com/bins/dcu3n");
             response.EnsureSuccessStatusCode();
 
             using (HttpContent content = response.Content)
@@ -144,7 +167,7 @@ namespace ClientRest
 
         private async Task<Student> CreateStudentAsync()
         {
-            HttpResponseMessage response = await client.PutAsJsonAsync(Recursos.Literales.add, alumno);
+            HttpResponseMessage response = await client.PostAsJsonAsync(Recursos.Literales.add, alumno);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsAsync<Student>();
         }
@@ -169,7 +192,7 @@ namespace ClientRest
         {
             var id = Convert.ToInt32(alumno.ID);
             var endpoint = $"api/Student/UpdateStudent/{id}";
-            HttpResponseMessage response = await client.PostAsJsonAsync(endpoint, alumno);
+            HttpResponseMessage response = await client.PutAsJsonAsync(endpoint, alumno);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsAsync<Student>();

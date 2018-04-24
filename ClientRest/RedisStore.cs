@@ -14,13 +14,7 @@ namespace ClientRest
 
         static RedisStore()
         {
-            /*
-            var configurationOptions = new ConfigurationOptions
-            {
-                EndPoints = { "localhost" }
-            };*/
-
-            string configurationOptions = ConfigurationManager.AppSettings["redisconn"].ToString();
+            string configurationOptions = ConfigurationManager.AppSettings[Recursos.Literales.redisconn].ToString();
             LazyConnection = new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(configurationOptions));
         }
 

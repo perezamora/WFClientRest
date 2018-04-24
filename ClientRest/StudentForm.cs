@@ -29,28 +29,38 @@ namespace ClientRest
             InitializeComponent();
         }
 
-        private void BtnAction_Click(object sender, EventArgs e)
+        private void InitHttpHeader()
+        {
+            var baseurl = System.Configuration.ConfigurationManager.AppSettings[Recursos.Literales.baseendopint];
+            client.BaseAddress = new Uri(baseurl);
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        }
+
+        private async void BtnAction_Click(object sender, EventArgs e)
         {
             LoadAlumnoData();
             var accion = Environment.GetEnvironmentVariable(Recursos.Literales.accion, EnvironmentVariableTarget.User);
             switch ((OpcAccion)Enum.Parse(typeof(OpcAccion), accion.ToString(), true))
             {
                 case OpcAccion.Create:
-                    HideFieldFormReadDelete();
-                    ShowStudent(Task<Student>.Run(CreateStudentAsync).Result);
+                    var create = await CreateStudentAsync();
+                    ShowStudent(create);
                     break;
                 case OpcAccion.Read:
-                    ShowStudent(Task<Student>.Run(ReadStudentAsync).Result);
+                    var read = await ReadStudentAsync();
+                    ShowStudent(read);
                     break;
                 case OpcAccion.Delete:
-                    var code = Task<HttpStatusCode>.Run(DeleteStudentAsync).Result;
+                    var code = await DeleteStudentAsync();
                     break;
                 case OpcAccion.Update:
-                    ShowStudent(Task<Student>.Run(UpdateStudenAsync).Result);
+                    var delete = await UpdateStudenAsync();
+                    ShowStudent(delete);
                     break;
                case OpcAccion.GetAll:
-                    var listaAlumnos = Task<List<Student>>.Run(ReadAllStudentAsync).Result;
-                    ShowAllStudent(listaAlumnos);
+                    var list = await GetStudents();
+                    ShowAllStudent(list);
                     break;
             }
             ResetFieldForm();
@@ -106,12 +116,9 @@ namespace ClientRest
             dataGridView1.DataSource = lalumnos;
         }
 
-        private void InitHttpHeader()
+        private async Task<List<Student>> GetStudents()
         {
-            var baseurl = System.Configuration.ConfigurationManager.AppSettings[Recursos.Literales.baseendopint];
-            client.BaseAddress = new Uri(baseurl);
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            return await Task<List<Student>>.Run(() => ReadAllStudentAsync().Result);
         }
 
         private async Task<List<Student>> ReadAllStudentAsync()
@@ -120,7 +127,7 @@ namespace ClientRest
 
             try
             {
-                HttpResponseMessage response = await client.GetAsync("https://api.myjson.com/bins/kpe");
+                HttpResponseMessage response = await client.GetAsync("https://api.myjson.com/bins/z7577");
                 //HttpResponseMessage response = await client.GetAsync(Recursos.Literales.getAll);
                 response.EnsureSuccessStatusCode();
                 List<Student> alumnos = new List<Student>();
@@ -238,6 +245,11 @@ namespace ClientRest
             labelSurname.Visible = true;
             labelDni.Visible = true;
             labelBirth.Visible = true;
+        }
+
+        private void HelloBtn_Click(object sender, EventArgs e)
+        {
+            textShow.Text = "Hello Mindundi!!!";
         }
     }
 }

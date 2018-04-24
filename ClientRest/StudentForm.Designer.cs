@@ -41,6 +41,8 @@
             this.textDni = new System.Windows.Forms.TextBox();
             this.BirthDate = new System.Windows.Forms.DateTimePicker();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.HelloBtn = new System.Windows.Forms.Button();
+            this.textShow = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -161,11 +163,30 @@
             this.dataGridView1.Size = new System.Drawing.Size(988, 193);
             this.dataGridView1.TabIndex = 13;
             // 
+            // HelloBtn
+            // 
+            this.HelloBtn.Location = new System.Drawing.Point(563, 234);
+            this.HelloBtn.Name = "HelloBtn";
+            this.HelloBtn.Size = new System.Drawing.Size(219, 51);
+            this.HelloBtn.TabIndex = 14;
+            this.HelloBtn.Text = "Hello button";
+            this.HelloBtn.UseVisualStyleBackColor = true;
+            this.HelloBtn.Click += new System.EventHandler(this.HelloBtn_Click);
+            // 
+            // textShow
+            // 
+            this.textShow.Location = new System.Drawing.Point(823, 259);
+            this.textShow.Name = "textShow";
+            this.textShow.Size = new System.Drawing.Size(239, 26);
+            this.textShow.TabIndex = 15;
+            // 
             // StudentForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1115, 619);
+            this.Controls.Add(this.textShow);
+            this.Controls.Add(this.HelloBtn);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.BirthDate);
             this.Controls.Add(this.textDni);
@@ -202,6 +223,8 @@
         private System.Windows.Forms.TextBox textDni;
         private System.Windows.Forms.DateTimePicker BirthDate;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button HelloBtn;
+        private System.Windows.Forms.TextBox textShow;
     }
 }
 

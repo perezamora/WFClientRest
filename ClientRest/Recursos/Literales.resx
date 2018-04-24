@@ -150,4 +150,7 @@
   <data name="getById" xml:space="preserve">
     <value>$"api/Student/ReadStudent/{id}"</value>
   </data>
+  <data name="redisconn" xml:space="preserve">
+    <value>redisconn</value>
+  </data>
 </root>

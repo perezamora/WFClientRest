@@ -151,6 +151,15 @@ namespace ClientRest.Recursos {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a redisconn.
+        /// </summary>
+        internal static string redisconn {
+            get {
+                return ResourceManager.GetString("redisconn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Update.
         /// </summary>
         internal static string Update {
